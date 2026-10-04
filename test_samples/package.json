@@ -1,0 +1,9 @@
+﻿{
+  "name": "vulnerable-test-app",
+  "version": "1.0.0",
+  "dependencies": {
+    "loadsh": "4.17.21",
+    "cross-env.js": "1.0.0",
+    "minimist": "1.2.0"
+  }
+}

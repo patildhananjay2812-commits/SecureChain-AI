@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SecureChain AI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f7fafc;
+            background-image: linear-gradient(rgba(22, 135, 201, 0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(22, 135, 201, 0.045) 1px, transparent 1px);
+            background-size: 32px 32px;
+            color: #142437;
+            min-height: 100vh;
+            animation: page-enter 0.7s ease both;
+            overflow-x: hidden;
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            pointer-events: none;
+            filter: blur(8px);
+            opacity: 0.45;
+            z-index: -1;
+        }
+
+        body::before {
+            top: 16%;
+            left: -150px;
+            background: rgba(87, 202, 232, 0.18);
+            animation: drift-left 12s ease-in-out infinite alternate;
+        }
+
+        body::after {
+            right: -150px;
+            bottom: 8%;
+            background: rgba(62, 196, 151, 0.14);
+            animation: drift-right 14s ease-in-out infinite alternate;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        /* Header */
+
+        header {
+            border-bottom: 1px solid #dce7ef;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-inner {
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .shield {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: #e7f5fb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border: 1px solid #b7dceb;
+            box-shadow: 0 8px 20px rgba(22, 135, 201, 0.12);
+            animation: shield-pulse 3.5s ease-in-out infinite;
+        }
+
+        .brand h1 {
+            font-size: 24px;
+            letter-spacing: 0.5px;
+            color: #10283e;
+        }
+
+        .brand p {
+            color: #6d8192;
+            font-size: 13px;
+            margin-top: 3px;
+        }
+
+        .status {
+            padding: 8px 14px;
+            border-radius: 20px;
+            background: #eafaf3;
+            color: #16805c;
+            border: 1px solid #b9e7d2;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        /* Hero */
+
+        .hero {
+            text-align: center;
+            padding: 85px 20px 50px;
+            animation: rise-in 0.75s 0.1s ease both;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 7px 13px;
+            border-radius: 18px;
+            background: #e8f7fc;
+            color: #0876ad;
+            border: 1px solid #b6deed;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 18px rgba(8, 127, 190, 0.1);
+            animation: badge-in 0.7s 0.25s ease both;
+        }
+
+        .hero h2 {
+            font-size: 48px;
+            line-height: 1.1;
+            margin-bottom: 18px;
+        }
+
+        .hero h2 span {
+            color: #087fbe;
+            background: linear-gradient(110deg, #087fbe 0%, #18a779 45%, #087fbe 90%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: text-shimmer 5s linear infinite;
+        }
+
+        .hero p {
+            max-width: 700px;
+            margin: auto;
+            color: #607589;
+            line-height: 1.7;
+            font-size: 17px;
+        }
+
+        /* Upload Card */
+
+        .upload-card {
+            max-width: 700px;
+            margin: 0 auto 70px;
+            background: rgba(255, 255, 255, 0.94);
+            border: 1px solid #dce7ef;
+            border-radius: 20px;
+            padding: 38px;
+            box-shadow: 0 22px 55px rgba(29, 72, 105, 0.12);
+            animation: rise-in 0.75s 0.2s ease both;
+        }
+
+        .upload-area {
+            border: 2px dashed #9ec6d9;
+            border-radius: 16px;
+            padding: 45px 20px;
+            text-align: center;
+            background: #f8fcfe;
+            transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+        }
+
+        .upload-area:hover {
+            border-color: #1687c9;
+            background: #f1faff;
+            transform: translateY(-2px);
+        }
+
+        .upload-icon {
+            font-size: 42px;
+            margin-bottom: 15px;
+            animation: icon-float 3s ease-in-out infinite;
+        }
+
+        .upload-area h3 {
+            font-size: 21px;
+            margin-bottom: 10px;
+        }
+
+        .upload-area p {
+            color: #6d8192;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .choose-btn {
+            display: inline-block;
+            padding: 12px 22px;
+            background: #e7f5fb;
+            color: #086d9f;
+            border: 1px solid #a8d6e7;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .file-name {
+            margin-top: 18px;
+            color: #087fbe;
+            font-size: 14px;
+            min-height: 20px;
+        }
+
+        input[type="url"] {
+            width: min(100%, 560px);
+            padding: 14px 16px;
+            border: 1px solid #b8cfdd;
+            border-radius: 10px;
+            background: #ffffff;
+            color: #142437;
+            font-size: 15px;
+        }
+
+        input[type="url"]::placeholder {
+            color: #8a9bab;
+        }
+
+        .source-choice {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .source-choice label {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #b8cfdd;
+            border-radius: 10px;
+            color: #536b7e;
+            cursor: pointer;
+            text-align: center;
+            font-size: 14px;
+            background: #ffffff;
+            transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+        }
+
+        .source-choice label:has(input:checked) {
+            color: #086d9f;
+            border-color: #1687c9;
+            background: #eaf8fd;
+            box-shadow: 0 6px 14px rgba(22, 135, 201, 0.1);
+            transform: translateY(-1px);
+        }
+
+        input[type="url"]:focus,
+        input[type="file"]:focus {
+            outline: 3px solid rgba(22, 135, 201, 0.14);
+            border-color: #1687c9;
+        }
+
+        .source-choice input {
+            accent-color: #1687c9;
+            margin-right: 6px;
+        }
+
+        .source-panel[hidden] {
+            display: none;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #b8cfdd;
+            border-radius: 10px;
+            background: #ffffff;
+            color: #536b7e;
+        }
+
+        .analyze-btn {
+            width: 100%;
+            margin-top: 25px;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: #087fbe;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            box-shadow: 0 10px 18px rgba(8, 127, 190, 0.2);
+        }
+
+        .analyze-btn:hover {
+            background: #076d9f;
+            transform: translateY(-2px);
+            box-shadow: 0 14px 24px rgba(8, 127, 190, 0.25);
+        }
+
+        .analyze-btn:disabled {
+            background: #dce7ef;
+            cursor: not-allowed;
+            color: #8495a4;
+        }
+
+        .analyze-btn.is-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .analyze-btn.is-loading::before {
+            content: "";
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 0.75s linear infinite;
+        }
+
+        /* Features */
+
+        .features {
+            padding-bottom: 80px;
+            animation: rise-in 0.75s 0.35s ease both;
+        }
+
+        .features-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .features-title h3 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .features-title p {
+            color: #6d8192;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid #dce7ef;
+            border-radius: 15px;
+            padding: 25px;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+            border-color: #b6deed;
+            box-shadow: 0 16px 30px rgba(29, 72, 105, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 25px;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h4 {
+            margin-bottom: 8px;
+            font-size: 17px;
+            transition: color 0.25s ease;
+        }
+
+        .feature-card:hover h4 {
+            color: #087fbe;
+        }
+
+        .feature-card p {
+            color: #6d8192;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        /* Footer */
+
+        footer {
+            border-top: 1px solid #dce7ef;
+            text-align: center;
+            padding: 25px;
+            color: #718398;
+            font-size: 13px;
+        }
+
+        @media (max-width: 800px) {
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h2 {
+                font-size: 36px;
+            }
+
+            .header-inner {
+                gap: 15px;
+            }
+
+            .status {
+                display: none;
+            }
+        }
+
+        nav a,
+        nav button {
+            color: #0876ad;
+            background: transparent;
+            border: 0;
+            cursor: pointer;
+            font: inherit;
+            text-decoration: none;
+        }
+
+        nav a:hover,
+        nav button:hover {
+            color: #075b83;
+        }
+
+        .choose-btn:hover {
+            background: #d9f0fa;
+            transform: translateY(-2px);
+        }
+
+        @keyframes page-enter {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes rise-in {
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shield-pulse {
+            0%, 100% { box-shadow: 0 8px 20px rgba(22, 135, 201, 0.12); }
+            50% { box-shadow: 0 10px 26px rgba(22, 135, 201, 0.24); }
+        }
+
+        @keyframes badge-in {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes icon-float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(-3deg); }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes drift-left {
+            to { transform: translate(90px, 40px) scale(1.15); }
+        }
+
+        @keyframes drift-right {
+            to { transform: translate(-80px, -35px) scale(0.9); }
+        }
+
+        @keyframes text-shimmer {
+            to { background-position: 200% center; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="container header-inner">
+
+            <div class="brand">
+
+                <div class="shield">
+                    🛡
+                </div>
+
+                <div>
+                    <h1>SecureChain AI</h1>
+                    <p>Software Supply Chain Security Analyzer</p>
+                </div>
+
+            </div>
+
+            <div class="status">
+                ● SYSTEM READY
+            </div>
+
+            <nav>
+                {% if current_user %}
+                <a href="{{ url_for('history') }}" style="color:#71dcff; margin-right:12px;">History</a>
+                <form action="{{ url_for('logout') }}" method="post" style="display:inline;"><button type="submit">Sign out</button></form>
+                {% else %}
+                <a href="{{ url_for('login') }}" style="color:#71dcff; margin-right:12px;">Sign in</a>
+                <a href="{{ url_for('register') }}" style="color:#71dcff;">Register</a>
+                {% endif %}
+            </nav>
+
+        </div>
+    </header>
+
+    {% if error %}
+    <div style="background: #ffe3e3; color: #d00000; padding: 15px; text-align: center; border-bottom: 1px solid #ffb3b3;">
+        <strong>Error:</strong> {{ error }}
+    </div>
+    {% endif %}
+
+
+    <main>
+
+        <section class="hero">
+
+            <div class="hero-badge">
+                SOFTWARE SUPPLY CHAIN SECURITY
+            </div>
+
+            <h2>
+                Secure your dependencies.<br>
+                <span>Protect your software.</span>
+            </h2>
+
+            <p>
+                Connect a public GitHub repository and SecureChain AI will
+                analyze its dependencies for vulnerabilities, suspicious
+                package names, and software supply-chain risks.
+            </p>
+
+        </section>
+
+
+        <section class="upload-card">
+
+            <form action="/upload" method="POST" id="uploadForm" enctype="multipart/form-data">
+
+                <div class="source-choice" aria-label="Choose analysis source">
+                    <label>
+                        <input type="radio" name="upload_source" value="github" checked>
+                        GitHub URL
+                    </label>
+                    <label>
+                        <input type="radio" name="upload_source" value="zip">
+                        ZIP file
+                    </label>
+                </div>
+
+                <div class="upload-area source-panel" id="githubPanel">
+
+                    <div class="upload-icon">
+                        ◇
+                    </div>
+
+                    <h3>
+                        Analyze a GitHub repository
+                    </h3>
+
+                    <p>
+                        Paste a public repository URL containing a package.json file.
+                    </p>
+
+                    <input
+                        type="url"
+                        id="githubUrl"
+                        name="github_url"
+                        placeholder="https://github.com/owner/repository"
+                        pattern="https://(www\\.)?github\\.com/[^/]+/[^/]+/?"
+                        required
+                    >
+
+                    <div
+                        class="file-name"
+                        id="fileName"
+                    >
+                        Public repositories only
+                    </div>
+
+                </div>
+
+                <div class="upload-area source-panel" id="zipPanel" hidden>
+
+                    <div class="upload-icon">
+                        ◇
+                    </div>
+
+                    <h3>Analyze a ZIP project</h3>
+
+                    <p>Upload a ZIP file containing a package.json file. Maximum size: 10 MB.</p>
+
+                    <input
+                        type="file"
+                        id="zipFile"
+                        name="zip_file"
+                        accept=".zip,application/zip"
+                    >
+
+                    <div class="file-name" id="zipFileName">No ZIP file selected</div>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="analyze-btn"
+                    id="analyzeBtn"
+                >
+                    Analyze Project
+                </button>
+
+            </form>
+
+        </section>
+
+        <script>
+            const sourceInputs = document.querySelectorAll('input[name="upload_source"]');
+            const githubPanel = document.getElementById("githubPanel");
+            const zipPanel = document.getElementById("zipPanel");
+            const githubUrl = document.getElementById("githubUrl");
+            const zipFile = document.getElementById("zipFile");
+            const zipFileName = document.getElementById("zipFileName");
+
+            function updateSourcePanel() {
+                const source = document.querySelector('input[name="upload_source"]:checked').value;
+                const isZip = source === "zip";
+                githubPanel.hidden = isZip;
+                zipPanel.hidden = !isZip;
+                githubUrl.required = !isZip;
+                zipFile.required = isZip;
+            }
+
+            sourceInputs.forEach((input) => input.addEventListener("change", updateSourcePanel));
+            zipFile.addEventListener("change", () => {
+                zipFileName.textContent = zipFile.files[0]
+                    ? zipFile.files[0].name
+                    : "No ZIP file selected";
+            });
+            document.getElementById("uploadForm").addEventListener("submit", () => {
+                const analyzeBtn = document.getElementById("analyzeBtn");
+                analyzeBtn.disabled = true;
+                analyzeBtn.classList.add("is-loading");
+                analyzeBtn.textContent = "Analyzing project...";
+            });
+            updateSourcePanel();
+        </script>
+
+
+        <section class="features container">
+
+            <div class="features-title">
+
+                <h3>
+                    What SecureChain AI checks
+                </h3>
+
+                <p>
+                    Multiple security signals in one analysis
+                </p>
+
+            </div>
+
+
+            <div class="feature-grid">
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        🔍
+                    </div>
+
+                    <h4>
+                        Dependency Analysis
+                    </h4>
+
+                    <p>
+                        Extracts project dependencies and identifies
+                        the packages used by your application.
+                    </p>
+
+                </div>
+
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        🛡
+                    </div>
+
+                    <h4>
+                        Vulnerability Detection
+                    </h4>
+
+                    <p>
+                        Identifies dependencies associated with known
+                        security issues and provides remediation guidance.
+                    </p>
+
+                </div>
+
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        ⚠️
+                    </div>
+
+                    <h4>
+                        Typosquatting Detection
+                    </h4>
+
+                    <p>
+                        Detects package names that closely resemble
+                        popular packages and may require investigation.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+        SecureChain AI • Hackathon MVP
+    </footer>
+
+
+    <script>
+
+        const githubUrl =
+            document.getElementById("githubUrl");
+
+        const urlStatus =
+            document.getElementById("fileName");
+
+        githubUrl.addEventListener(
+            "input",
+            function () {
+                urlStatus.textContent = githubUrl.value
+                    ? "Ready to analyze"
+                    : "Public repositories only";
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>

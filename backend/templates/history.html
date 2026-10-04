@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Scan history | SecureChain AI</title>
+    <style>
+        body { margin: 0; background: #07111f; color: #f5f7fa; font-family: Arial, sans-serif; }
+        main { width: min(92%, 1000px); margin: 48px auto; }
+        header { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+        a { color: #71dcff; }
+        table { width: 100%; margin-top: 28px; border-collapse: collapse; background: #0a1827; border: 1px solid #1d344d; }
+        th, td { padding: 14px; text-align: left; border-bottom: 1px solid #1d344d; }
+        th { color: #91a4b7; font-size: 12px; text-transform: uppercase; }
+        .score { color: #62e6b2; font-weight: bold; }
+        .logout { color: #ffb5bb; }
+    </style>
+</head>
+<body>
+    <main>
+        <header>
+            <div><h1>Scan history</h1><p>{{ current_user.email }}</p></div>
+            <nav><a href="{{ url_for('home') }}">New scan</a> · <form action="{{ url_for('logout') }}" method="post" style="display:inline"><button class="logout" type="submit">Sign out</button></form></nav>
+        </header>
+        {% if scans %}
+        <table>
+            <thead><tr><th>Project</th><th>Source</th><th>Risk</th><th>Dependencies</th><th>Date</th></tr></thead>
+            <tbody>{% for scan in scans %}<tr><td><a href="{{ url_for('history_detail', scan_id=scan.id) }}">{{ scan.project_name }}</a></td><td>{{ scan.source }}</td><td class="score">{{ scan.risk_level }} · {{ scan.risk_score }}/100</td><td>{{ scan.dependency_count }}</td><td>{{ scan.created_at[:19].replace('T', ' ') }}</td></tr>{% endfor %}</tbody>
+        </table>
+        {% else %}<p>No scans have been saved in this workspace yet.</p>{% endif %}
+    </main>
+</body>
+</html>

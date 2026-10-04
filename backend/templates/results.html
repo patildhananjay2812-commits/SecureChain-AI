@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Results - SecureChain AI</title>
+    <style>
+        /* Modern Professional Dashboard CSS */
+        :root {
+            --bg-color: #f4f7fb;
+            --text-color: #0f172a;
+            --nav-bg: #ffffff;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --accent-cyan: #06b6d4;
+            --accent-blue: #3b82f6;
+            --accent-navy: #1e293b;
+            --status-safe: #10b981;
+            --status-low: #34d399;
+            --status-medium: #fbbf24;
+            --status-high: #f97316;
+            --status-critical: #ef4444;
+            --status-unknown: #94a3b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--nav-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .brand h1 {
+            margin: 0;
+            font-size: 24px;
+            color: var(--accent-navy);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand p {
+            margin: 5px 0 0;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .section-header {
+            color: var(--accent-navy);
+            border-bottom: 2px solid var(--accent-cyan);
+            padding-bottom: 10px;
+            margin: 40px 0 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        /* Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-item {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .info-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #64748b;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--accent-navy);
+        }
+
+        /* Risk Score Card */
+        .risk-score-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+            border-left: 5px solid var(--accent-blue);
+        }
+
+        .risk-score-large {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--accent-navy);
+        }
+
+        .risk-level-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: white;
+            display: inline-block;
+        }
+
+        .risk-CRITICAL { background-color: var(--status-critical); }
+        .risk-HIGH { background-color: var(--status-high); }
+        .risk-MEDIUM { background-color: var(--status-medium); }
+        .risk-LOW { background-color: var(--status-low); }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: #f8fafc;
+            font-weight: 600;
+            color: var(--accent-navy);
+        }
+
+        /* Badges */
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .badge-safe { background-color: var(--status-safe); }
+        .badge-warning { background-color: var(--status-medium); color: #000; }
+        .badge-danger { background-color: var(--status-critical); }
+        .badge-unknown { background-color: var(--status-unknown); }
+
+        /* Finding Card */
+        .finding-card {
+            border-left: 4px solid var(--status-high);
+            margin-bottom: 15px;
+        }
+        .finding-card.severity-CRITICAL { border-left-color: var(--status-critical); }
+        .finding-card.severity-HIGH { border-left-color: var(--status-high); }
+        .finding-card.severity-MEDIUM { border-left-color: var(--status-medium); }
+        .finding-card.severity-LOW { border-left-color: var(--status-low); }
+
+        .ai-advisor {
+            background: linear-gradient(to right, #f0f9ff, #e0f2fe);
+            border: 1px solid #bae6fd;
+        }
+        
+        .ai-badge {
+            background: var(--accent-blue);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            vertical-align: middle;
+            margin-left: 10px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+        }
+
+        .btn-primary { background-color: var(--accent-blue); color: white; }
+        .btn-secondary { background-color: white; color: var(--accent-navy); border: 1px solid var(--border-color); }
+        .btn-success { background-color: var(--status-safe); color: white; }
+        
+        .actions-bar {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .empty-state {
+            color: #64748b;
+            font-style: italic;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 6px;
+        }
+        
+        pre.ai-text {
+            white-space: pre-wrap;
+            font-family: inherit;
+            margin: 0;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="brand">
+            <h1>?? SecureChain AI</h1>
+            <p>Security Analysis Report</p>
+        </div>
+        <div>
+            <span style="color: var(--status-safe); font-weight: bold;">? ANALYSIS COMPLETED</span>
+        </div>
+    </header>
+
+    <main>
+        <!-- SECTION 1: ANALYSIS SUMMARY -->
+        <div class="card">
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Project Name</div>
+                    <div class="info-value">{{ project_name }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Analysis Source</div>
+                    <div class="info-value">{% if '/' in project_name %}GitHub{% else %}ZIP{% endif %}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Scan ID</div>
+                    <div class="info-value">{{ scan_id }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Status</div>
+                    <div class="info-value" style="color: var(--status-safe)">COMPLETED</div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-header">Risk Overview</h2>
+        
+        <!-- SECTION 2: RISK SCORE -->
+        <div class="card risk-score-card">
+            <div>
+                <div class="info-label">Overall Dependency Risk Score</div>
+                <div class="risk-score-large">{{ risk_score }} <span style="font-size: 24px; color: #64748b;">/ 100</span></div>
+                <p style="color: #64748b; margin-top: 5px;">Based on vulnerability, typosquatting, and reputation checks.</p>
+            </div>
+            <div>
+                <span class="risk-level-badge risk-{{ risk_level }}">{{ risk_level }}</span>
+            </div>
+        </div>
+
+        <!-- Risk Summary Cards (Counts) -->
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Total Dependencies</div>
+                <div class="info-value">{{ dependency_count }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Security Findings</div>
+                <div class="info-value">{{ findings|length }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Typosquatting Findings</div>
+                <div class="info-value">{{ typosquatting_findings|length }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Reputation Risks</div>
+                <div class="info-value">{{ reputation_findings|selectattr('reputation_risk', 'equalto', 'HIGH')|list|length }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Provenance Issues</div>
+                <div class="info-value">{{ provenance_findings|selectattr('provenance_status', 'equalto', 'UNVERIFIED')|list|length }}</div>
+            </div>
+        </div>
+
+        <!-- SECTION 3: DEPENDENCY INVENTORY -->
+        <h2 class="section-header">Dependency Inventory</h2>
+        <div class="card">
+            {% if dependencies %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Package</th>
+                        <th>Version</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for name, version in dependencies.items() %}
+                    <tr>
+                        <td><strong>{{ name }}</strong></td>
+                        <td>{{ version }}</td>
+                        <td>
+                            {% set ns = namespace(status='SAFE', cls='badge-safe') %}
+                            
+                            {% for f in findings %}
+                                {% if f.name == name %}
+                                    {% if f.severity in ['CRITICAL', 'HIGH'] %}
+                                        {% set ns.status = 'VULNERABLE' %}
+                                        {% set ns.cls = 'badge-danger' %}
+                                    {% elif f.severity == 'MEDIUM' and ns.status != 'VULNERABLE' %}
+                                        {% set ns.status = 'REVIEW' %}
+                                        {% set ns.cls = 'badge-warning' %}
+                                    {% elif f.severity == 'UNKNOWN' and ns.status == 'SAFE' %}
+                                        {% set ns.status = 'UNKNOWN' %}
+                                        {% set ns.cls = 'badge-unknown' %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% for t in typosquatting_findings %}
+                                {% if t.package == name %}
+                                    {% set ns.status = 'SUSPICIOUS' %}
+                                    {% set ns.cls = 'badge-danger' %}
+                                {% endif %}
+                            {% endfor %}
+                            
+                            <span class="badge {{ ns.cls }}">{{ ns.status }}</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">No dependencies were found in the provided package.json.</div>
+            {% endif %}
+        </div>
+
+        <!-- SECTION 4: VULNERABILITY FINDINGS -->
+        <h2 class="section-header">Vulnerability Analysis</h2>
+        <p style="font-size: 13px; color: #64748b; margin-bottom: 15px;">Powered by SecureChain AI Vulnerability Database</p>
+        
+        {% if findings %}
+            {% for f in findings %}
+            <div class="card finding-card severity-{{ f.severity }}">
+                <div style="display: flex; justify-content: space-between;">
+                    <h3>Package: {{ f.name }} <span style="color: #64748b; font-size: 16px;">v{{ f.version }}</span></h3>
+                    <span class="badge badge-{% if f.severity in ['CRITICAL', 'HIGH'] %}danger{% elif f.severity == 'MEDIUM' %}warning{% elif f.severity == 'UNKNOWN' %}unknown{% else %}safe{% endif %}">{{ f.severity }}</span>
+                </div>
+                <p><strong>Description:</strong> {{ f.description }}</p>
+                <p><strong>Recommended Remediation:</strong> {{ f.remediation }}</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="card empty-state">No matching vulnerability was detected by the current vulnerability database.</div>
+        {% endif %}
+
+        <!-- SECTION 5: TYPOSQUATTING ANALYSIS -->
+        <h2 class="section-header">Typosquatting Detection</h2>
+        {% if typosquatting_findings %}
+            {% for t in typosquatting_findings %}
+            <div class="card finding-card severity-{{ t.severity }}">
+                <h3>Suspicious Package: {{ t.package }}</h3>
+                <p><strong>Possible Match:</strong> {{ t.possible_match }}</p>
+                <p><strong>Similarity:</strong> {{ t.similarity }}%</p>
+                <p><strong>Severity:</strong> <span class="badge badge-danger">{{ t.severity }}</span></p>
+                <p><strong>Explanation:</strong> Potential typosquatting package. {{ t.reason }}. Requires verification.</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="card empty-state">No potential typosquatting packages were detected.</div>
+        {% endif %}
+
+        <!-- SECTION 6: PACKAGE REPUTATION -->
+        <h2 class="section-header">Package Reputation Analysis</h2>
+        <div class="card">
+            {% if reputation_findings %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Package</th>
+                        <th>Reputation Risk</th>
+                        <th>Flags</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in reputation_findings %}
+                    <tr>
+                        <td><strong>{{ r.package | default('NOT AVAILABLE') }}</strong></td>
+                        <td>
+                            <span class="badge badge-{% if r.reputation_risk == 'HIGH' %}danger{% elif r.reputation_risk == 'MEDIUM' %}warning{% else %}safe{% endif %}">
+                                {{ r.reputation_risk | default('NOT AVAILABLE') }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if r.flags %}
+                                <ul>
+                                {% for flag in r.flags %}
+                                    <li>{{ flag }}</li>
+                                {% endfor %}
+                                </ul>
+                            {% else %}
+                                None
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">No reputation issues were reported.</div>
+            {% endif %}
+        </div>
+
+        <!-- SECTION 7: BUILD PROVENANCE -->
+        <h2 class="section-header">Build Provenance</h2>
+        <div class="card">
+            {% if provenance_findings %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Package</th>
+                        <th>Version</th>
+                        <th>Provenance Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in provenance_findings %}
+                    <tr>
+                        <td><strong>{{ p.package | default('Unknown') }}</strong></td>
+                        <td>{{ p.version | default('Unknown') }}</td>
+                        <td>
+                            {% if p.provenance_status == 'VERIFIED' %}
+                                <span class="badge badge-safe">VERIFIED</span>
+                            {% else %}
+                                <span class="badge badge-warning">UNVERIFIED</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">No provenance issues were reported.</div>
+            {% endif %}
+        </div>
+
+        <!-- SECTION 8: LOCKFILE INTEGRITY -->
+        <h2 class="section-header">Lockfile Integrity</h2>
+        <div class="card">
+            {% if lockfile_integrity %}
+                {% if lockfile_integrity.status == 'NOT_PROVIDED' %}
+                    <div class="empty-state">No package-lock.json was provided.</div>
+                {% else %}
+                    <p><strong>Status:</strong> <span class="badge badge-{% if lockfile_integrity.status == 'VERIFIED' %}safe{% else %}warning{% endif %}">{{ lockfile_integrity.status }}</span></p>
+                    <p><strong>Total Packages:</strong> {{ lockfile_integrity.total_packages | default(0) }}</p>
+                    <p><strong>Missing Hashes:</strong> {{ lockfile_integrity.missing_hashes | length if lockfile_integrity.missing_hashes else 0 }}</p>
+                {% endif %}
+            {% else %}
+                <div class="empty-state">No package-lock.json was provided.</div>
+            {% endif %}
+        </div>
+
+        <!-- SECTION 9: OVERALL SECURITY FINDINGS -->
+        <h2 class="section-header">Consolidated Security Findings</h2>
+        <div class="card">
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Vulnerabilities</div>
+                    <div class="info-value">{{ findings|length }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Typosquatting</div>
+                    <div class="info-value">{{ typosquatting_findings|length }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Unknown Dependencies</div>
+                    <div class="info-value">{{ findings|selectattr('severity', 'equalto', 'UNKNOWN')|list|length }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Reputation Risks</div>
+                    <div class="info-value">{{ reputation_findings|selectattr('reputation_risk', 'equalto', 'HIGH')|list|length }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Provenance Issues</div>
+                    <div class="info-value">{{ provenance_findings|selectattr('provenance_status', 'equalto', 'UNVERIFIED')|list|length }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Lockfile Issues</div>
+                    <div class="info-value">{% if lockfile_integrity and lockfile_integrity.status != 'VERIFIED' %}1{% else %}0{% endif %}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 10: RECOMMENDED REMEDIATION -->
+        <h2 class="section-header">Recommended Remediation</h2>
+        {% if recommendations %}
+            {% for rec in recommendations %}
+            <div class="card" style="border-left: 4px solid var(--accent-blue);">
+                <h3 style="margin-top: 0;"><span class="badge badge-{% if rec.priority == 'URGENT' %}danger{% else %}warning{% endif %}">{{ rec.priority }}</span> {{ rec.title }}</h3>
+                <p><strong>Action:</strong> {{ rec.text }}</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="card empty-state">No immediate remediations required.</div>
+        {% endif %}
+
+        <!-- SECTION 11: AI SECURITY ADVISOR -->
+        <h2 class="section-header">AI Security Advisor <span class="ai-badge">AI-assisted analysis</span></h2>
+        <div class="card ai-advisor">
+            {% if llm_advice %}
+            <p style="font-size: 12px; color: #64748b; margin-top: 0;">AI-assisted security advice based on the detected findings.</p>
+            <pre class="ai-text">{{ llm_advice }}</pre>
+            {% else %}
+            <div class="empty-state">AI advice is currently unavailable. Review the security findings and remediation recommendations above.</div>
+            {% endif %}
+        </div>
+
+        <!-- SECTION 12: SECURITY SCORE BREAKDOWN -->
+        <h2 class="section-header">Security Score Breakdown</h2>
+        <div class="card">
+            <p><strong>Overall Risk Score:</strong> {{ risk_score }} / 100</p>
+            <p><strong>Risk Level:</strong> <span class="badge risk-{{ risk_level }}">{{ risk_level }}</span></p>
+            <p>The following finding categories contributed to the analysis:</p>
+            <ul>
+                <li>Vulnerability Findings: {{ findings|length }} items</li>
+                <li>Typosquatting Findings: {{ typosquatting_findings|length }} items</li>
+                <li>Other Dependency Risks (Reputation/Provenance): {{ reputation_findings|selectattr('reputation_risk', 'equalto', 'HIGH')|list|length + provenance_findings|selectattr('provenance_status', 'equalto', 'UNVERIFIED')|list|length }} items</li>
+            </ul>
+        </div>
+
+        <!-- SECTION 13 & 14: ACTION BUTTONS & JSON REPORT -->
+        <div class="actions-bar">
+            <a href="/" class="btn btn-secondary">Back to Dashboard</a>
+            <a href="/" class="btn btn-secondary">Analyze Another Project</a>
+            <a href="{{ url_for('history') }}" class="btn btn-secondary">View Scan History</a>
+            
+            <form action="/export-remediated-manifest" method="POST" style="display: inline;">
+                <input type="hidden" name="package_data" value='{{ package_data | tojson | e }}'>
+                <input type="hidden" name="typosquatting_findings" value='{{ typosquatting_findings | tojson | e }}'>
+                <input type="hidden" name="findings" value='{{ findings | tojson | e }}'>
+                <input type="hidden" name="project_name" value="{{ project_name }}">
+                <button type="submit" class="btn btn-success">Export Remediated package.json</button>
+            </form>
+            
+            <button onclick="downloadJSONReport()" class="btn btn-primary">Download Security Report (JSON)</button>
+        </div>
+    </main>
+
+    <script type="application/json" id="security-report-data">
+        {{ {
+            "project_name": project_name,
+            "analysis_source": ("GitHub" if "/" in project_name else "ZIP"),
+            "scan_id": scan_id,
+            "dependency_count": dependency_count,
+            "dependencies": dependencies,
+            "findings": findings,
+            "typosquatting_findings": typosquatting_findings,
+            "reputation_findings": reputation_findings,
+            "provenance_findings": provenance_findings,
+            "lockfile_integrity": lockfile_integrity,
+            "risk_score": risk_score,
+            "risk_level": risk_level,
+            "recommendations": recommendations,
+            "llm_advice": llm_advice
+        } | tojson }}
+    </script>
+
+    <script>
+        function downloadJSONReport() {
+            const dataElement = document.getElementById("security-report-data");
+            let reportData = {};
+            try {
+                reportData = JSON.parse(dataElement.textContent || "{}");
+            } catch (error) {
+                console.error("Security report data error:", error);
+                alert("Could not prepare the security report.");
+                return;
+            }
+            const blob = new Blob([JSON.stringify(reportData, null, 4)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "security-report-{{ scan_id }}.json";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+    <!-- =========================================================
+         SECURITY COPILOT
+         ========================================================= -->
+
+    <style>
+        #security-copilot {
+            position: fixed; right: 18px; bottom: 18px; width: 330px; z-index: 99999;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+        .copilot-card {
+            background: #fff; border: 1px solid #dbe5ef; border-radius: 14px;
+            box-shadow: 0 14px 40px rgba(15,35,63,.22); overflow: hidden;
+        }
+        .copilot-header {
+            display:flex; align-items:center; justify-content:space-between;
+            padding:13px 14px; border-bottom:1px solid #e6edf4;
+        }
+        .copilot-title {
+            display:flex; align-items:center; gap:7px; color:#10233f;
+            font-size:13px; font-weight:800;
+        }
+        .copilot-icon { color:#159bd3; font-size:16px; }
+        .copilot-status { color:#10b981; font-size:10px; font-weight:800; }
+        .copilot-status::before {
+            content:""; display:inline-block; width:7px; height:7px; margin-right:5px;
+            border-radius:50%; background:#10b981;
+        }
+        .copilot-body { padding:12px; }
+        .copilot-hint { margin:0 0 12px; color:#9aaaba; font-size:10px; line-height:1.5; }
+        .copilot-answer {
+            display:none; max-height:210px; overflow-y:auto; margin-bottom:10px; padding:10px;
+            background:#f5f9fc; border:1px solid #e0e9f1; border-radius:9px;
+            color:#243b53; font-size:11px; line-height:1.55; white-space:pre-wrap;
+        }
+        .copilot-form { display:flex; gap:6px; }
+        .copilot-input {
+            min-width:0; flex:1; height:38px; box-sizing:border-box; padding:0 10px;
+            border:1px solid #d7e2ec; border-radius:7px; outline:none;
+            background:#061522; color:#fff; font-size:11px;
+        }
+        .copilot-input::placeholder { color:#9db0c2; }
+        .copilot-input:focus { border-color:#18aee8; box-shadow:0 0 0 2px rgba(24,174,232,.12); }
+        .copilot-ask {
+            width:42px; border:0; border-radius:7px; background:#159bd3; color:#fff;
+            font-size:11px; font-weight:800; cursor:pointer;
+        }
+        .copilot-ask:hover { background:#087fb4; }
+        .copilot-ask:disabled { opacity:.6; cursor:wait; }
+        @media (max-width:600px) {
+            #security-copilot { right:10px; bottom:10px; width:calc(100vw - 20px); max-width:330px; }
+        }
+    </style>
+
+    <script type="application/json" id="security-copilot-context">
+        {{ {
+            "project_name": project_name | default(""),
+            "risk_score": risk_score | default(0),
+            "risk_level": risk_level | default(""),
+            "dependency_count": dependency_count | default(0),
+            "dependencies": dependencies | default({}),
+            "findings": findings | default([]),
+            "typosquatting_findings": typosquatting_findings | default([]),
+            "recommendations": recommendations | default([])
+        } | tojson }}
+    </script>
+
+    <div id="security-copilot">
+        <div class="copilot-card">
+            <div class="copilot-header">
+                <div class="copilot-title"><span class="copilot-icon">?</span><span>Security Copilot</span></div>
+                <div class="copilot-status">READY</div>
+            </div>
+            <div class="copilot-body">
+                <p class="copilot-hint">Ask me about a dependency, vulnerability, or how to fix a finding.</p>
+                <div id="copilot-answer" class="copilot-answer"></div>
+                <form id="copilot-form" class="copilot-form">
+                    <input id="copilot-input" class="copilot-input" type="text" maxlength="1000" autocomplete="off" placeholder="Ask about this scan...">
+                    <button id="copilot-ask" class="copilot-ask" type="submit">Ask</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const contextElement = document.getElementById("security-copilot-context");
+            const form = document.getElementById("copilot-form");
+            const input = document.getElementById("copilot-input");
+            const button = document.getElementById("copilot-ask");
+            const answerBox = document.getElementById("copilot-answer");
+            let scanContext = {};
+
+            try {
+                scanContext = JSON.parse(contextElement.textContent || "{}");
+            } catch (error) {
+                console.error("Security Copilot context error:", error);
+            }
+
+            function showAnswer(message) {
+                answerBox.textContent = message || "No answer was returned.";
+                answerBox.style.display = "block";
+            }
+
+            form.addEventListener("submit", async function (event) {
+                event.preventDefault();
+                const question = input.value.trim();
+                if (!question) { input.focus(); return; }
+                button.disabled = true;
+                button.textContent = "...";
+                showAnswer("Security Copilot is analyzing this scan...");
+
+                try {
+                    const response = await fetch("/ask", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ question: question, scan_context: scanContext })
+                    });
+                    const data = await response.json();
+                    if (!response.ok) {
+                        throw new Error(data.answer || "Security Copilot request failed.");
+                    }
+                    showAnswer(data.answer);
+                    input.value = "";
+                } catch (error) {
+                    console.error("Security Copilot error:", error);
+                    showAnswer(error.message || "Security Copilot could not answer right now.");
+                } finally {
+                    button.disabled = false;
+                    button.textContent = "Ask";
+                }
+            });
+        })();
+    </script>
+
+</body>
+</html>
